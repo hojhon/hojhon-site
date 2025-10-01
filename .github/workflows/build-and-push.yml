@@ -60,15 +60,15 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPOSITORY }}:latest
+          ${{ secrets.DOCKER_REPOSITORY }}:latest
 
     - name: Show pushed image tag (diagnostic)
       run: |
-        IMAGE="${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPOSITORY }}:latest"
+        IMAGE="${{ secrets.DOCKER_REPOSITORY }}:latest"
         echo "Pushed image: $IMAGE"
 
     - name: Try pulling pushed image (diagnostic)
       run: |
-        IMAGE="${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPOSITORY }}:latest"
+        IMAGE="${{ secrets.DOCKER_REPOSITORY }}:latest"
         echo "Attempting docker pull $IMAGE"
         docker pull "$IMAGE" || true
