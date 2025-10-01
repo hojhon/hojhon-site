@@ -40,6 +40,7 @@ jobs:
         SH
         chmod +x docker-entrypoint.sh
 
+
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
