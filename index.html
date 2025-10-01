@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jhon Herrera - Cloud Professional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Styles for scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-300">
+
+    <!-- Header / Navigation -->
+    <header class="bg-slate-900/70 backdrop-blur-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-white">Jhon Herrera</a>
+            <ul class="flex items-center space-x-6">
+                <li><a href="#skills" class="hover:text-sky-400 transition-colors duration-300">Skills</a></li>
+                <li><a href="#certs" class="hover:text-sky-400 transition-colors duration-300">Certifications</a></li>
+                <li><a href="#projects" class="hover:text-sky-400 transition-colors duration-300">Projects</a></li>
+                <li><a href="#contact" class="hover:text-sky-400 transition-colors duration-300">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 md:py-20">
+
+        <!-- Hero Section -->
+        <section class="text-center min-h-[60vh] flex flex-col items-center justify-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight reveal">
+                Hi, I'm <span class="gradient-text">Jhon Herrera</span>
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl text-slate-400 reveal">Cloud Security & SecDevOps Engineer</p>
+            
+            <p class="mt-6 max-w-3xl mx-auto text-lg reveal">
+                A seasoned Cloud Security and SecDevOps professional with a proven track record in leading complex cloud developments, migrations, and security enhancements. I specialize in creating automated processes to streamline repetitive tasks, reducing operational costs, and enhancing security in cloud environments.
+            </p>
+            
+            <!-- Social Icons -->
+            <div id="socials" class="mt-8 flex justify-center space-x-6 reveal">
+                <!-- GITHUB LINK -->
+                <a href="https://github.com/hojhon" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition-colors duration-300" title="GitHub">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg>
+                </a>
+                <!-- LINKEDIN LINK -->
+                <a href="https://www.linkedin.com/in/hojhon" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition-colors duration-300" title="LinkedIn">
+                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+                </a>
+                <!-- EMAIL LINK -->
+                <a href="mailto:ho.jhon01@gmail.com" class="text-slate-400 hover:text-white transition-colors duration-300" title="Email">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Technical Skills Section -->
+        <section id="skills" class="py-12 md:py-20 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Technical Acumen</h2>
+            <div class="mt-12 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Languages</h3>
+                        <ul class="space-y-2 text-slate-400">
+                            <li>Python</li>
+                            <li>SQL (MySQL)</li>
+                            <li>Terraform & Packer</li>
+                            <li>Shell Scripting</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Tools & Platforms</h3>
+                        <ul class="space-y-2 text-slate-400">
+                            <li>AWS, GCP, Azure</li>
+                            <li>Wiz, Qualys, ShiftLeft</li>
+                            <li>Kubernetes, EKS, GKE</li>
+                            <li>Git, Jira, ServiceNow</li>
+                            <li>BigQuery, Looker, Tableau</li>
+                            <li>ArgoCD, FluxCD, TailScale</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Operating Systems</h3>
+                        <ul class="space-y-2 text-slate-400">
+                            <li>Linux (Kali, RedHat, Ubuntu, CentOS)</li>
+                            <li>Windows Server</li>
+                            <li>MacOS</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certs" class="py-12 md:py-20 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Certifications</h2>
+            <div class="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                
+                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">GCP Associate Cloud Engineer</h3>
+                    <p class="text-sky-400 mt-2 text-sm">Google Cloud</p>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">HashiCorp Certified: Terraform Associate</h3>
+                    <p class="text-sky-400 mt-2 text-sm">HashiCorp</p>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA Security+</h3>
+                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA CySA+</h3>
+                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">Azure Fundamentals</h3>
+                    <p class="text-sky-400 mt-2 text-sm">Microsoft</p>
+                </div>
+                 <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">AWS Certified Cloud Practitioner</h3>
+                    <p class="text-sky-400 mt-2 text-sm">Amazon Web Services</p>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA Project+</h3>
+                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA A+</h3>
+                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-12 md:py-20 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Featured Projects & Experience</h2>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div class="bg-slate-800 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white">CI/CD Pipeline Optimization</h3>
+                        <p class="mt-2 text-slate-400 flex-grow">Engineered and enhanced Azure DevOps CI/CD pipelines for SailPoint, achieving a 70% reduction in deployment time by automating a previously manual process. Integrated pipelines with ServiceNow for approvals and ShiftLeft (Qwiet.ai) for code scans.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">Azure DevOps</span>
+                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">ServiceNow</span>
+                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">ShiftLeft</span>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="bg-slate-800 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white">Cloud Cost Reduction Initiative</h3>
+                        <p class="mt-2 text-slate-400 flex-grow">Led cost-saving initiatives that reduced Azure monthly expenses by over $10,000. Achieved this by identifying and eliminating unused infrastructure, optimizing compute resources, and implementing automated shutdowns for lower environments.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">Azure</span>
+                            <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">Cost Optimization</span>
+                            <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">Automation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white">Vulnerability Management Automation</h3>
+                        <p class="mt-2 text-slate-400 flex-grow">Developed automation modules to streamline WIZ feature testing, significantly reducing deployment times. Optimized ETL jobs and enhanced reporting processes, improving cloud operations and data utilization from WIZ to generate detailed reports and dashboards.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Wiz</span>
+                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">GCP</span>
+                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span>
+                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Looker</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-12 md:py-20 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Contact Me</h2>
+            <p class="mt-4 text-center text-slate-400">Have a question or want to work together? Send me a message!</p>
+            <div class="mt-12 max-w-xl mx-auto">
+                <!-- FOR FUNCTIONALITY, POINT THE ACTION ATTRIBUTE TO YOUR FORMSPREE.IO ENDPOINT -->
+                <form action="FORMSPREE_URL_PLACEHOLDER" method="POST" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-slate-400">Your Name</label>
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full bg-slate-800 border border-slate-700 rounded-md py-3 px-4 text-slate-300 focus:ring-sky-500 focus:border-sky-500 transition">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-slate-400">Your Email</label>
+                        <input type="email" name="email" id="email" required class="mt-1 block w-full bg-slate-800 border border-slate-700 rounded-md py-3 px-4 text-slate-300 focus:ring-sky-500 focus:border-sky-500 transition">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-slate-400">Message</label>
+                        <textarea name="message" id="message" rows="4" required class="mt-1 block w-full bg-slate-800 border border-slate-700 rounded-md py-3 px-4 text-slate-300 focus:ring-sky-500 focus:border-sky-500 transition"></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-sky-500">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800">
+        <div class="container mx-auto px-6 py-6 text-center text-slate-500">
+            <p>&copy; 2024 Jhon Herrera. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const revealElements = document.querySelectorAll('.reveal');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(elem => {
+                observer.observe(elem);
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
