@@ -44,11 +44,11 @@ jobs:
           exit 0
         fi
         
-        # Parse results and count by severity - simplified to catch all findings
-        critical=$(jq '[.results[] | select(.extra.severity == "ERROR")] | length' semgrep-results.json 2>/dev/null || echo "0")
-        high=$(jq '[.results[] | select(.extra.severity == "WARNING")] | length' semgrep-results.json 2>/dev/null || echo "0") 
-        medium=$(jq '[.results[] | select(.extra.severity == "INFO")] | length' semgrep-results.json 2>/dev/null || echo "0")
-        low=$(jq '[.results[] | select(.extra.severity == "NOTE")] | length' semgrep-results.json 2>/dev/null || echo "0")
+        # Parse results and count by severity - map based on impact metadata
+        critical=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood == "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
+        high=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood != "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
+        medium=$(jq '[.results[] | select(.extra.metadata.impact == "MEDIUM" or .extra.severity == "ERROR")] | length' semgrep-results.json 2>/dev/null || echo "0")
+        low=$(jq '[.results[] | select(.extra.metadata.impact == "LOW" or .extra.severity == "WARNING" or .extra.severity == "INFO" or .extra.severity == "NOTE")] | length' semgrep-results.json 2>/dev/null || echo "0")
         
         echo "critical=$critical" >> $GITHUB_OUTPUT
         echo "high=$high" >> $GITHUB_OUTPUT
