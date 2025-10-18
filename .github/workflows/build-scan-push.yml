@@ -8,102 +8,13 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  security-scan:
-    name: Security Scan
+  build-and-scan:
+    name: Build, Scan and Push
     runs-on: ubuntu-latest
+    environment: hojhon-site
     permissions:
       contents: read
       security-events: write
-    outputs:
-      scan-passed: ${{ steps.evaluate-scan.outputs.passed }}
-    env:
-      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-    
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Run Semgrep code scan
-      id: semgrep-scan
-      run: |
-        # Install semgrep
-        python -m pip install --upgrade pip
-        pip install semgrep
-        
-        # Run semgrep and capture output
-        echo "Running Semgrep scan..."
-        semgrep --config=auto --json --output=semgrep-results.json . || true
-        
-        # Check if results file exists
-        if [ ! -f semgrep-results.json ]; then
-          echo "No semgrep results file generated"
-          echo "critical=0" >> $GITHUB_OUTPUT
-          echo "high=0" >> $GITHUB_OUTPUT
-          echo "medium=0" >> $GITHUB_OUTPUT
-          echo "low=0" >> $GITHUB_OUTPUT
-          exit 0
-        fi
-        
-        # Parse results and count by severity - map based on impact metadata
-        critical=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood == "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
-        high=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood != "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
-        medium=$(jq '[.results[] | select(.extra.metadata.impact == "MEDIUM" or .extra.severity == "ERROR")] | length' semgrep-results.json 2>/dev/null || echo "0")
-        low=$(jq '[.results[] | select(.extra.metadata.impact == "LOW" or .extra.severity == "WARNING" or .extra.severity == "INFO" or .extra.severity == "NOTE")] | length' semgrep-results.json 2>/dev/null || echo "0")
-        
-        echo "critical=$critical" >> $GITHUB_OUTPUT
-        echo "high=$high" >> $GITHUB_OUTPUT
-        echo "medium=$medium" >> $GITHUB_OUTPUT
-        echo "low=$low" >> $GITHUB_OUTPUT
-        
-        echo "Security scan results:"
-        echo "  Critical: $critical"
-        echo "  High: $high"
-        echo "  Medium: $medium"
-        echo "  Low: $low"
-
-    - name: Upload Semgrep results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: semgrep-results
-        path: semgrep-results.json
-        retention-days: 7
-
-    - name: Evaluate scan results
-      id: evaluate-scan
-      run: |
-        critical=${{ steps.semgrep-scan.outputs.critical }}
-        high=${{ steps.semgrep-scan.outputs.high }}
-        medium=${{ steps.semgrep-scan.outputs.medium }}
-        low=${{ steps.semgrep-scan.outputs.low }}
-        
-        echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
-        echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
-        echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Critical | $critical |" >> $GITHUB_STEP_SUMMARY
-        echo "| High | $high |" >> $GITHUB_STEP_SUMMARY
-        echo "| Medium | $medium |" >> $GITHUB_STEP_SUMMARY
-        echo "| Low | $low |" >> $GITHUB_STEP_SUMMARY
-        
-        if [ "$critical" -gt 0 ] || [ "$high" -gt 0 ]; then
-          echo "❌ **Scan FAILED**: Found $critical critical and $high high severity vulnerabilities" >> $GITHUB_STEP_SUMMARY
-          echo "Build and push will be skipped due to security findings."
-          echo "passed=false" >> $GITHUB_OUTPUT
-          exit 1
-        else
-          echo "✅ **Scan PASSED**: No critical or high severity vulnerabilities found" >> $GITHUB_STEP_SUMMARY
-          if [ "$medium" -gt 0 ] || [ "$low" -gt 0 ]; then
-            echo "Found $medium medium and $low low severity findings (acceptable for deployment)" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "passed=true" >> $GITHUB_OUTPUT
-        fi
-
-  build-and-push:
-    name: Build and Push Docker Image
-    runs-on: ubuntu-latest
-    environment: hojhon-site
-    needs: security-scan
-    if: needs.security-scan.outputs.scan-passed == 'true'
     
     steps:
     - name: Checkout
@@ -129,7 +40,142 @@ jobs:
         SH
         chmod +x docker-entrypoint.sh
 
+    - name: Build Docker image (for scanning)
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: false
+        tags: hojhon-site:scan
+        load: true
+
+    - name: Scan Docker image with Trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: hojhon-site:scan
+        format: 'json'
+        output: 'trivy-results.json'
+        exit-code: '0'
+
+    - name: Run Semgrep code scan
+      id: semgrep-scan
+      env:
+        SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      run: |
+        # Install semgrep
+        python -m pip install --upgrade pip
+        pip install semgrep
+        
+        # Run semgrep and capture output
+        echo "Running Semgrep scan..."
+        semgrep --config=auto --json --output=semgrep-results.json . || true
+        
+        # Check if results file exists
+        if [ ! -f semgrep-results.json ]; then
+          echo "No semgrep results file generated"
+          echo "code-critical=0" >> $GITHUB_OUTPUT
+          echo "code-high=0" >> $GITHUB_OUTPUT
+          echo "code-medium=0" >> $GITHUB_OUTPUT
+          echo "code-low=0" >> $GITHUB_OUTPUT
+        else
+          # Parse results and count by severity
+          critical=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood == "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
+          high=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood != "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
+          medium=$(jq '[.results[] | select(.extra.metadata.impact == "MEDIUM" or .extra.severity == "ERROR")] | length' semgrep-results.json 2>/dev/null || echo "0")
+          low=$(jq '[.results[] | select(.extra.metadata.impact == "LOW" or .extra.severity == "WARNING" or .extra.severity == "INFO" or .extra.severity == "NOTE")] | length' semgrep-results.json 2>/dev/null || echo "0")
+          
+          echo "code-critical=$critical" >> $GITHUB_OUTPUT
+          echo "code-high=$high" >> $GITHUB_OUTPUT
+          echo "code-medium=$medium" >> $GITHUB_OUTPUT
+          echo "code-low=$low" >> $GITHUB_OUTPUT
+          
+          echo "Code scan results:"
+          echo "  Critical: $critical"
+          echo "  High: $high"
+          echo "  Medium: $medium"
+          echo "  Low: $low"
+        fi
+
+    - name: Evaluate Docker scan results
+      id: evaluate-docker-scan
+      run: |
+        if [ ! -f trivy-results.json ]; then
+          echo "No Trivy results found"
+          echo "docker-critical=0" >> $GITHUB_OUTPUT
+          echo "docker-high=0" >> $GITHUB_OUTPUT
+          echo "docker-medium=0" >> $GITHUB_OUTPUT
+          echo "docker-low=0" >> $GITHUB_OUTPUT
+        else
+          critical=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL")] | length' trivy-results.json 2>/dev/null || echo "0")
+          high=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "HIGH")] | length' trivy-results.json 2>/dev/null || echo "0")
+          medium=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "MEDIUM")] | length' trivy-results.json 2>/dev/null || echo "0")
+          low=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "LOW")] | length' trivy-results.json 2>/dev/null || echo "0")
+          
+          echo "docker-critical=$critical" >> $GITHUB_OUTPUT
+          echo "docker-high=$high" >> $GITHUB_OUTPUT
+          echo "docker-medium=$medium" >> $GITHUB_OUTPUT
+          echo "docker-low=$low" >> $GITHUB_OUTPUT
+          
+          echo "Docker image scan results:"
+          echo "  Critical: $critical"
+          echo "  High: $high"
+          echo "  Medium: $medium"
+          echo "  Low: $low"
+        fi
+
+    - name: Evaluate overall security results
+      id: evaluate-security
+      run: |
+        # Get results from previous steps
+        code_critical=${{ steps.semgrep-scan.outputs.code-critical }}
+        code_high=${{ steps.semgrep-scan.outputs.code-high }}
+        code_medium=${{ steps.semgrep-scan.outputs.code-medium }}
+        code_low=${{ steps.semgrep-scan.outputs.code-low }}
+        
+        docker_critical=${{ steps.evaluate-docker-scan.outputs.docker-critical }}
+        docker_high=${{ steps.evaluate-docker-scan.outputs.docker-high }}
+        docker_medium=${{ steps.evaluate-docker-scan.outputs.docker-medium }}
+        docker_low=${{ steps.evaluate-docker-scan.outputs.docker-low }}
+        
+        # Calculate totals
+        total_critical=$((code_critical + docker_critical))
+        total_high=$((code_high + docker_high))
+        total_medium=$((code_medium + docker_medium))
+        total_low=$((code_low + docker_low))
+        
+        echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+        echo "| Scan Type | Critical | High | Medium | Low |" >> $GITHUB_STEP_SUMMARY
+        echo "|-----------|----------|------|--------|-----|" >> $GITHUB_STEP_SUMMARY
+        echo "| Code (Semgrep) | $code_critical | $code_high | $code_medium | $code_low |" >> $GITHUB_STEP_SUMMARY
+        echo "| Docker (Trivy) | $docker_critical | $docker_high | $docker_medium | $docker_low |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Total** | **$total_critical** | **$total_high** | **$total_medium** | **$total_low** |" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "$total_critical" -gt 0 ] || [ "$total_high" -gt 0 ]; then
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Security Scan FAILED**: Found $total_critical critical and $total_high high severity vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          echo "Push will be skipped due to security findings." >> $GITHUB_STEP_SUMMARY
+          echo "scan-passed=false" >> $GITHUB_OUTPUT
+          exit 1
+        else
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Security Scan PASSED**: No critical or high severity vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          if [ "$total_medium" -gt 0 ] || [ "$total_low" -gt 0 ]; then
+            echo "Found $total_medium medium and $total_low low severity findings (acceptable for deployment)" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "scan-passed=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Upload scan results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-scan-results
+        path: |
+          semgrep-results.json
+          trivy-results.json
+        retention-days: 7
+
     - name: Login to registry
+      if: steps.evaluate-security.outputs.scan-passed == 'true'
       uses: docker/login-action@v2
       with:
         registry: ${{ secrets.DOCKER_REGISTRY }}
@@ -137,6 +183,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push final image
+      if: steps.evaluate-security.outputs.scan-passed == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -145,19 +192,11 @@ jobs:
           ${{ secrets.DOCKER_REPOSITORY }}:latest
           ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
 
-    - name: Upload Trivy results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: trivy-results
-        path: trivy-results.json
-        retention-days: 7
-
     - name: Final summary
       if: always()
       run: |
         echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
-        if [ "${{ needs.security-scan.outputs.scan-passed }}" == "true" ]; then
+        if [ "${{ steps.evaluate-security.outputs.scan-passed }}" == "true" ]; then
           echo "✅ Image built and pushed successfully to ${{ secrets.DOCKER_REPOSITORY }}:latest" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tagged with commit SHA: ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         else
