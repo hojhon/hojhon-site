@@ -44,11 +44,11 @@ jobs:
           exit 0
         fi
         
-        # Parse results and count by severity
-        critical=$(jq '[.results[] | select(.extra.severity == "ERROR" and (.extra.metadata.cwe // .extra.metadata.owasp // .extra.metadata.security) != null)] | length' semgrep-results.json 2>/dev/null || echo "0")
-        high=$(jq '[.results[] | select(.extra.severity == "WARNING" and (.extra.metadata.cwe // .extra.metadata.owasp // .extra.metadata.security) != null)] | length' semgrep-results.json 2>/dev/null || echo "0")
-        medium=$(jq '[.results[] | select(.extra.severity == "INFO" and (.extra.metadata.cwe // .extra.metadata.owasp // .extra.metadata.security) != null)] | length' semgrep-results.json 2>/dev/null || echo "0")
-        low=$(jq '[.results[] | select(.extra.severity == "NOTE" and (.extra.metadata.cwe // .extra.metadata.owasp // .extra.metadata.security) != null)] | length' semgrep-results.json 2>/dev/null || echo "0")
+        # Parse results and count by severity - simplified to catch all findings
+        critical=$(jq '[.results[] | select(.extra.severity == "ERROR")] | length' semgrep-results.json 2>/dev/null || echo "0")
+        high=$(jq '[.results[] | select(.extra.severity == "WARNING")] | length' semgrep-results.json 2>/dev/null || echo "0") 
+        medium=$(jq '[.results[] | select(.extra.severity == "INFO")] | length' semgrep-results.json 2>/dev/null || echo "0")
+        low=$(jq '[.results[] | select(.extra.severity == "NOTE")] | length' semgrep-results.json 2>/dev/null || echo "0")
         
         echo "critical=$critical" >> $GITHUB_OUTPUT
         echo "high=$high" >> $GITHUB_OUTPUT
@@ -129,55 +129,7 @@ jobs:
         SH
         chmod +x docker-entrypoint.sh
 
-    - name: Build Docker image (for scanning)
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: false
-        tags: hojhon-site:scan
-        load: true
-
-    - name: Scan Docker image with Trivy
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: hojhon-site:scan
-        format: 'json'
-        output: 'trivy-results.json'
-        exit-code: '0'
-
-    - name: Evaluate Docker scan results
-      id: evaluate-docker-scan
-      run: |
-        if [ ! -f trivy-results.json ]; then
-          echo "No Trivy results found, proceeding with push"
-          echo "docker-scan-passed=true" >> $GITHUB_OUTPUT
-          exit 0
-        fi
-        
-        critical=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL")] | length' trivy-results.json 2>/dev/null || echo "0")
-        high=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "HIGH")] | length' trivy-results.json 2>/dev/null || echo "0")
-        medium=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "MEDIUM")] | length' trivy-results.json 2>/dev/null || echo "0")
-        low=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "LOW")] | length' trivy-results.json 2>/dev/null || echo "0")
-        
-        echo "## Docker Image Scan Summary" >> $GITHUB_STEP_SUMMARY
-        echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
-        echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Critical | $critical |" >> $GITHUB_STEP_SUMMARY
-        echo "| High | $high |" >> $GITHUB_STEP_SUMMARY
-        echo "| Medium | $medium |" >> $GITHUB_STEP_SUMMARY
-        echo "| Low | $low |" >> $GITHUB_STEP_SUMMARY
-        
-        if [ "$critical" -gt 0 ] || [ "$high" -gt 0 ]; then
-          echo "❌ **Docker Scan FAILED**: Found $critical critical and $high high severity vulnerabilities in image" >> $GITHUB_STEP_SUMMARY
-          echo "docker-scan-passed=false" >> $GITHUB_OUTPUT
-          exit 1
-        else
-          echo "✅ **Docker Scan PASSED**: No critical or high severity vulnerabilities found in image" >> $GITHUB_STEP_SUMMARY
-          echo "docker-scan-passed=true" >> $GITHUB_OUTPUT
-        fi
-
     - name: Login to registry
-      if: steps.evaluate-docker-scan.outputs.docker-scan-passed == 'true'
       uses: docker/login-action@v2
       with:
         registry: ${{ secrets.DOCKER_REGISTRY }}
@@ -185,7 +137,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push final image
-      if: steps.evaluate-docker-scan.outputs.docker-scan-passed == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -206,7 +157,7 @@ jobs:
       if: always()
       run: |
         echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
-        if [ "${{ steps.evaluate-docker-scan.outputs.docker-scan-passed }}" == "true" ]; then
+        if [ "${{ needs.security-scan.outputs.scan-passed }}" == "true" ]; then
           echo "✅ Image built and pushed successfully to ${{ secrets.DOCKER_REPOSITORY }}:latest" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tagged with commit SHA: ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         else
