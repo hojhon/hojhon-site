@@ -11,81 +11,122 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* bg-slate-900 */
         }
         .gradient-text {
             background: linear-gradient(to right, #38bdf8, #34d399);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .section-bg {
+            background-color: rgba(30, 41, 59, 0.5); /* bg-slate-800 with 50% opacity */
+        }
         /* Styles for scroll animations */
         .reveal {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
         .reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
+        /* Custom transition for nav menu */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .cert-logo {
+            filter: grayscale(1) brightness(1.5);
+            transition: filter 0.3s ease-in-out;
+        }
+        .cert-card:hover .cert-logo {
+            filter: grayscale(0) brightness(1);
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-300">
 
-    <!-- Header / Navigation -->
-    <header class="bg-slate-900/70 backdrop-blur-lg sticky top-0 z-50">
+    <!-- Header / Navigation --><header class="bg-slate-900/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-800">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold text-white">Jhon Herrera</a>
-            <ul class="flex items-center space-x-6">
-                <li><a href="#skills" class="hover:text-sky-400 transition-colors duration-300">Skills</a></li>
-                <li><a href="#certs" class="hover:text-sky-400 transition-colors duration-300">Certifications</a></li>
-                <li><a href="#projects" class="hover:text-sky-400 transition-colors duration-300">Projects</a></li>
-                <li><a href="#contact" class="hover:text-sky-400 transition-colors duration-300">Contact</a></li>
+            <div class="flex items-center space-x-4">
+                <a href="#" class="text-xl font-bold text-white">Jhon Herrera</a>
+                <div class="hidden md:flex items-center text-slate-400 text-sm border-l border-slate-700 pl-4">
+                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                    <span>Atlanta, GA, USA</span>
+                </div>
+            </div>
+            
+            <!-- Desktop Nav -->
+            <ul class="hidden md:flex items-center space-x-8">
+                <li><a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors duration-300">Skills</a></li>
+                <li><a href="#certs" class="text-slate-300 hover:text-sky-400 transition-colors duration-300">Certifications</a></li>
+                <li><a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors duration-300">Projects</a></li>
+                <li><a href="#contact" class="bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-300">Contact</a></li>
             </ul>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-white focus:outline-none">
+                    <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
         </nav>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden opacity-0 transform -translate-y-4">
+            <ul class="px-6 pb-4 flex flex-col space-y-4">
+                 <li><a href="#skills" class="block text-slate-300 hover:text-sky-400 transition-colors duration-300">Skills</a></li>
+                <li><a href="#certs" class="block text-slate-300 hover:text-sky-400 transition-colors duration-300">Certifications</a></li>
+                <li><a href="#projects" class="block text-slate-300 hover:text-sky-400 transition-colors duration-300">Projects</a></li>
+                <li><a href="#contact" class="block bg-sky-600 hover:bg-sky-700 text-white font-medium text-center py-2 px-4 rounded-md transition-all duration-300">Contact</a></li>
+            </ul>
+        </div>
     </header>
 
     <main class="container mx-auto px-6 py-12 md:py-20">
 
-        <!-- Hero Section -->
-        <section class="text-center min-h-[60vh] flex flex-col items-center justify-center">
+        <!-- Hero Section --><section class="text-center min-h-[70vh] flex flex-col items-center justify-center">
             <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight reveal">
-                Hi, I'm <span class="gradient-text">Jhon Herrera</span>
+                Jhon Herrera
             </h1>
-            <p class="mt-4 text-xl md:text-2xl text-slate-400 reveal">Cloud Security & SecDevOps Engineer</p>
+            <h2 class="mt-4 text-2xl md:text-3xl font-medium text-transparent bg-clip-text gradient-text reveal">
+                Cloud Security Engineer
+            </h2>
             
-            <p class="mt-6 max-w-3xl mx-auto text-lg reveal">
-                A seasoned Cloud Security and SecDevOps professional with a proven track record in leading complex cloud developments, migrations, and security enhancements. I specialize in creating automated processes to streamline repetitive tasks, reducing operational costs, and enhancing security in cloud environments.
+            <p class="mt-8 max-w-3xl mx-auto text-lg text-slate-400 reveal">
+                I lead large-scale cloud migrations and implement robust DevSecOps principles. My focus is architecting secure, automated infrastructure to enhance system resilience and optimize efficiency.
             </p>
+
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 reveal">
+                 <a href="#contact" class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-md transition duration-300 ease-in-out transform hover:scale-105">Get In Touch</a>
+                 <a href="#projects" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 px-8 rounded-md transition duration-300 ease-in-out">View My Work</a>
+            </div>
             
-            <!-- Social Icons -->
-            <div id="socials" class="mt-8 flex justify-center space-x-6 reveal">
-                <!-- GITHUB LINK -->
-                <a href="https://github.com/hojhon" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition-colors duration-300" title="GitHub">
+            <!-- Social Icons --><div id="socials" class="mt-12 flex justify-center space-x-6 reveal">
+                <!-- GITHUB LINK --><a href="https://github.com/hojhon" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition-colors duration-300" title="GitHub">
                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg>
                 </a>
-                <!-- LINKEDIN LINK -->
-                <a href="https://www.linkedin.com/in/hojhon" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition-colors duration-300" title="LinkedIn">
+                <!-- LINKEDIN LINK --><a href="https://www.linkedin.com/in/hojhon" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition-colors duration-300" title="LinkedIn">
                      <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
                 </a>
-                <!-- EMAIL LINK -->
-                <a href="mailto:ho.jhon01@gmail.com" class="text-slate-400 hover:text-white transition-colors duration-300" title="Email">
+                <!-- EMAIL LINK --><a href="mailto:ho.jhon01@gmail.com" class="text-slate-400 hover:text-white transition-colors duration-300" title="Email">
                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"></path></svg>
                 </a>
             </div>
         </section>
 
-        <!-- Technical Skills Section -->
-        <section id="skills" class="py-12 md:py-20 reveal">
+        <!-- Technical Skills Section --><section id="skills" class="py-16 md:py-24 reveal section-bg rounded-lg">
             <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Technical Acumen</h2>
-            <div class="mt-12 max-w-4xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="mt-12 max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
                     <div>
-                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Languages</h3>
+                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Languages & IaC</h3>
                         <ul class="space-y-2 text-slate-400">
                             <li>Python</li>
-                            <li>SQL (MySQL)</li>
                             <li>Terraform & Packer</li>
                             <li>Shell Scripting</li>
+                            <li>SQL (MySQL)</li>
                         </ul>
                     </div>
                     <div>
@@ -93,16 +134,15 @@
                         <ul class="space-y-2 text-slate-400">
                             <li>AWS, GCP, Azure</li>
                             <li>Wiz, Qualys, ShiftLeft</li>
-                            <li>Kubernetes, EKS, GKE</li>
+                            <li>Kubernetes (EKS, GKE)</li>
                             <li>Git, Jira, ServiceNow</li>
-                            <li>BigQuery, Looker, Tableau</li>
-                            <li>ArgoCD, FluxCD, TailScale</li>
+                             <li>ArgoCD, FluxCD, TailScale</li>
                         </ul>
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold text-sky-400 mb-4">Operating Systems</h3>
                         <ul class="space-y-2 text-slate-400">
-                            <li>Linux (Kali, RedHat, Ubuntu, CentOS)</li>
+                            <li>Linux (Kali, RHEL, Ubuntu)</li>
                             <li>Windows Server</li>
                             <li>MacOS</li>
                         </ul>
@@ -111,52 +151,50 @@
             </div>
         </section>
 
-        <!-- Certifications Section -->
-        <section id="certs" class="py-12 md:py-20 reveal">
+        <!-- Certifications Section --><section id="certs" class="py-16 md:py-24 reveal">
             <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Certifications</h2>
-            <div class="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
                 
-                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">GCP Associate Cloud Engineer</h3>
-                    <p class="text-sky-400 mt-2 text-sm">Google Cloud</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://avatars.githubusercontent.com/u/2810941?s=200&v=4" alt="GCP Logo" class="h-20 w-20 mb-4 rounded-full object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=GCP';">
+                    <h3 class="text-md font-semibold text-white flex-grow">GCP Associate Cloud Engineer</h3>
                 </div>
-                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">HashiCorp Certified: Terraform Associate</h3>
-                    <p class="text-sky-400 mt-2 text-sm">HashiCorp</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://developer.hashicorp.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fterraform-badge-mini-associate.1419a397.svg&w=96&q=75&dpl=dpl_3tSM3qCiHRdnWXm43oL5dDuMjMDc" alt="Terraform Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Terraform';">
+                    <h3 class="text-md font-semibold text-white flex-grow">HashiCorp: Terraform Associate</h3>
                 </div>
-                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA Security+</h3>
-                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F8623b0fab71111efac96d615e91762a5%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="Security+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Sec%2B';">
+                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA Security+</h3>
                 </div>
-                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA CySA+</h3>
-                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F842acf9ab71111efac96d615e91762a5%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="CySA+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=CySA%2B';">
+                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA CySA+</h3>
                 </div>
-                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">Azure Fundamentals</h3>
-                    <p class="text-sky-400 mt-2 text-sm">Microsoft</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-fundamentals-badge.svg" alt="Azure Fundamentals Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Azure';">
+                    <h3 class="text-md font-semibold text-white flex-grow">Azure Fundamentals</h3>
                 </div>
-                 <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">AWS Certified Cloud Practitioner</h3>
-                    <p class="text-sky-400 mt-2 text-sm">Amazon Web Services</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://d1.awsstatic.com/onedam/marketing-channels/website/aws/en_US/certification/approved/images/certification-badges/clf-badge-resized.2fdbed6fe7b39cf6cef5063f283ddd689cc78caa.png" alt="AWS CCP Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=AWS';">
+                    <h3 class="text-md font-semibold text-white flex-grow">AWS Certified Cloud Practitioner</h3>
                 </div>
-                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA Project+</h3>
-                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F8485bccab71111ef888eca5646afc7d8%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="Project+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Proj%2B';">
+                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA Project+</h3>
                 </div>
-                <div class="bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <h3 class="text-lg font-semibold text-white flex-grow">CompTIA A+</h3>
-                    <p class="text-sky-400 mt-2 text-sm">CompTIA</p>
+                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F83adafb0b71111ef888eca5646afc7d8%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="A+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=A%2B';">
+                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA A+</h3>
                 </div>
             </div>
         </section>
 
-        <!-- Projects Section -->
-        <section id="projects" class="py-12 md:py-20 reveal">
+        <!-- Projects Section --><section id="projects" class="py-16 md:py-24 reveal section-bg rounded-lg">
             <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Featured Projects & Experience</h2>
-            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
 
-                <div class="bg-slate-800 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="bg-slate-900 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 hover:shadow-2xl hover:shadow-sky-900/20">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-xl font-semibold text-white">SailPoint IAM Migration to Azure</h3>
                         <p class="mt-2 text-slate-400 flex-grow">Supported the migration by creating infrastructure-as-code scripts to build the entire environment in Azure. Also architected a robust vulnerability management program using Qualys and Wiz, ensuring 100% availability and strict cost control for this critical internal tool.</p>
@@ -170,7 +208,7 @@
                     </div>
                 </div>
 
-                 <div class="bg-slate-800 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                 <div class="bg-slate-900 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 hover:shadow-2xl hover:shadow-green-900/20">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-xl font-semibold text-white">ForgeRock IAM Migration to GCP</h3>
                         <p class="mt-2 text-slate-400 flex-grow">Led the cloud migration by creating all infrastructure-as-code to deploy the customer-facing ForgeRock platform on GCP. Also implemented a comprehensive vulnerability management solution with Qualys and Wiz, maintaining 100% availability for The Home Depot's mobile app and web sign-ins.</p>
@@ -178,15 +216,13 @@
                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">GCP</span>
                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">IaC</span>
                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Leadership</span>
-                           <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">High Availability</span>
                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Terraform</span>
-                           <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Bash/Shell Scripting</span>
                            <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">GitHub Actions</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-800 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="bg-slate-900 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 hover:shadow-2xl hover:shadow-indigo-900/20">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-xl font-semibold text-white">Personal Website & Home Lab</h3>
                         <p class="mt-2 text-slate-400 flex-grow">This portfolio site is self-hosted in my Proxmox lab and served via a Cloudflare Tunnel. The rest of my home lab utilizes Terraform for IaC, Vault for secrets, ArgoCD for GitOps, and GitHub Actions for CI/CD.</p>
@@ -203,13 +239,11 @@
             </div>
         </section>
         
-        <!-- Contact Section -->
-        <section id="contact" class="py-12 md:py-20 reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Contact Me</h2>
-            <p class="mt-4 text-center text-slate-400">Have a question or want to work together? Send me a message!</p>
+        <!-- Contact Section --><section id="contact" class="py-16 md:py-24 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Get In Touch</h2>
+            <p class="mt-4 text-center text-slate-400 max-w-xl mx-auto">Have a question, an opportunity, or just want to connect? Feel free to send me a message.</p>
             <div class="mt-12 max-w-xl mx-auto">
-                <!-- FOR FUNCTIONALITY, POINT THE ACTION ATTRIBUTE TO YOUR FORMSPREE.IO ENDPOINT -->
-                <form action="FORMSPREE_URL_PLACEHOLDER" method="POST" class="space-y-6">
+                <!-- FOR FUNCTIONALITY, POINT THE ACTION ATTRIBUTE TO YOUR FORMSPREE.IO ENDPOINT --><form action="FORMSPREE_URL_PLACEHOLDER" method="POST" class="space-y-6">
                     <div>
                         <label for="name" class="block text-sm font-medium text-slate-400">Your Name</label>
                         <input type="text" name="name" id="name" required class="mt-1 block w-full bg-slate-800 border border-slate-700 rounded-md py-3 px-4 text-slate-300 focus:ring-sky-500 focus:border-sky-500 transition">
@@ -223,7 +257,8 @@
                         <textarea name="message" id="message" rows="4" required class="mt-1 block w-full bg-slate-800 border border-slate-700 rounded-md py-3 px-4 text-slate-300 focus:ring-sky-500 focus:border-sky-500 transition"></textarea>
                     </div>
                     <div>
-                        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-sky-500">
+                        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus. I lead large-scale cloud migrations and implement robust DevSecOps principles. My focus is architecting secure, automated infrastructure to enhance system resilience and optimize efficiency.
+-ring-sky-500">
                             Send Message
                         </button>
                     </div>
@@ -233,17 +268,16 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800">
-        <div class="container mx-auto px-6 py-6 text-center text-slate-500">
+    <!-- Footer --><footer class="bg-slate-900 border-t border-slate-800">
+        <div class="container mx-auto px-6 py-8 text-center text-slate-500">
             <p>&copy; 2024 Jhon Herrera. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Scroll reveal animation
             const revealElements = document.querySelectorAll('.reveal');
-
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -252,13 +286,32 @@
                     }
                 });
             }, { threshold: 0.1 });
+            revealElements.forEach(elem => observer.observe(elem));
 
-            revealElements.forEach(elem => {
-                observer.observe(elem);
+            // Mobile menu toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const openIcon = document.getElementById('menu-open-icon');
+            const closeIcon = document.getElementById('menu-close-icon');
+
+            menuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                if (isHidden) {
+                    mobileMenu.classList.remove('hidden');
+                    setTimeout(() => {
+                        mobileMenu.classList.remove('opacity-0', '-translate-y-4');
+                    }, 10);
+                } else {
+                    mobileMenu.classList.add('opacity-0', '-translate-y-4');
+                    setTimeout(() => {
+                        mobileMenu.classList.add('hidden');
+                    }, 300);
+                }
+                openIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
             });
         });
     </script>
 
 </body>
 </html>
-
