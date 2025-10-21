@@ -29,15 +29,17 @@ EOF
 # Make entrypoint executable
 RUN chmod +x docker-entrypoint.sh
 
-# Stage 2: Production stage
-FROM nginx:alpine3.20
+# Stage 2: Production stage  
+FROM nginx:latest
 
 # Create non-root user
-RUN addgroup -g 1001 -S nginx-app && \
-    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx-app -g nginx-app nginx-app
+RUN groupadd -g 1001 nginx-app && \
+    useradd -r -u 1001 -g nginx-app -s /sbin/nologin nginx-app
 
 # Update vulnerable packages
-RUN apk update && apk upgrade pcre2 && rm -rf /var/cache/apk/*
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y libxml2 libxslt1.1 libexpat1 xz-utils && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy static files from builder stage
 COPY --from=builder /app/index.html /usr/share/nginx/html/
