@@ -3,6 +3,9 @@
 # Stage 1: Build stage (prepare files)
 FROM alpine:3.18 AS builder
 
+# Accept build argument for Formspree Form ID
+ARG FORMSPREE_FORM_ID
+
 # Install required tools
 RUN apk add --no-cache \
     bash \
@@ -14,20 +17,12 @@ WORKDIR /app
 # Copy source files
 COPY . .
 
-# Create entrypoint script
-RUN cat > docker-entrypoint.sh <<'EOF'
-#!/bin/sh
-# Replace placeholder in the shipped index.html with the runtime Formspree URL
-if [ -n "$FORMSPREE_FORM_ID" ]; then
-  sed -i "s|FORMSPREE_URL_PLACEHOLDER|https://formspree.io/f/$FORMSPREE_FORM_ID|g" /usr/share/nginx/html/index.html || true
-else
-  echo "Warning: FORMSPREE_FORM_ID not set"
-fi
-exec "$@"
-EOF
-
-# Make entrypoint executable
-RUN chmod +x docker-entrypoint.sh
+# Replace placeholder with actual Formspree URL during build
+RUN if [ -n "$FORMSPREE_FORM_ID" ]; then \
+      sed -i "s|FORMSPREE_URL_PLACEHOLDER|https://formspree.io/f/$FORMSPREE_FORM_ID|g" index.html; \
+    else \
+      echo "Warning: FORMSPREE_FORM_ID build arg not provided"; \
+    fi
 
 # Stage 2: Production stage
 FROM nginx:alpine3.20

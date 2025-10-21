@@ -43,6 +43,8 @@ jobs:
         push: false
         tags: hojhon-site:scan
         load: true
+        build-args: |
+          FORMSPREE_FORM_ID=${{ secrets.FORMSPREE_FORM_ID }}
 
     - name: Scan Docker image with Trivy
       uses: aquasecurity/trivy-action@master
@@ -187,6 +189,8 @@ jobs:
         tags: |
           ${{ secrets.DOCKER_REPOSITORY }}:latest
           ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
+        build-args: |
+          FORMSPREE_FORM_ID=${{ secrets.FORMSPREE_FORM_ID }}
 
     - name: Final summary
       if: always()
