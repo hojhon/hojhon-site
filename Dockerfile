@@ -30,7 +30,11 @@ EOF
 RUN chmod +x docker-entrypoint.sh
 
 # Stage 2: Production stage
-FROM nginx:alpine
+FROM nginx:alpine3.20
+
+# Update packages to get security fixes, especially pcre2
+RUN apk update && apk upgrade --no-cache && \
+    apk add --no-cache pcre2>=10.46-r0
 
 # Create non-root user
 RUN addgroup -g 1001 -S nginx-app && \
