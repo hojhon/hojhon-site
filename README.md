@@ -17,28 +17,51 @@ This repository uses GitHub Actions for automated build, security scanning, and 
 4. **Security Evaluation** - Fails pipeline on critical/high vulnerabilities
 5. **Push** - Pushes secure images to Docker registry (only if scans pass)
 
-### Workflow Diagram
+### CI/CD Pipeline
+
+```mermaid
+graph LR
+    A[Trigger] --> B[Checkout] --> C[Build]
+    C --> D[Semgrep Scan]
+    C --> E[Trivy Scan]
+    D --> F{Security Gate}
+    E --> F
+    F -->|Pass| G[Push Image]
+    F -->|Fail| H[Fail]
+    
+    style F fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style G fill:#96ceb4,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style H fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
+```
+
+### Deployment Architecture
 
 ```mermaid
 graph TB
-    A[Manual Trigger] --> B[Checkout Code] --> C[Build Docker Image]
+    subgraph "GitHub"
+        A[Developer] --> B[Push Code]
+        B --> C[GitHub Actions]
+        C --> D[Docker Registry]
+    end
     
-    C --> D[Semgrep Code Scan]
-    C --> E[Trivy Container Scan]
+    subgraph "Proxmox Infrastructure"
+        subgraph "Kubernetes Cluster"
+            E[ArgoCD] --> F[K8s Services]
+            F --> G[Portfolio Pod]
+        end
+    end
     
-    D --> F{Security Gate}
-    E --> F
+    subgraph "Cloudflare"
+        H[Zero Trust Tunnel] --> I[Public Access]
+    end
     
-    F -->|Pass| G[Docker Login] --> H[Build & Push]
-    F -->|Fail| I[Pipeline Fails]
+    D --> E
+    G --> H
     
-    H --> J[Ready]
-    
-    style F fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style G fill:#4ecdc4,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style H fill:#45b7d1,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style I fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style J fill:#96ceb4,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style C fill:#45b7d1,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style E fill:#ff9800,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style G fill:#4caf50,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style H fill:#ff6b35,stroke:#ffffff,stroke-width:2px,color:#ffffff
 ```
 
 #### Security Gate Details:
@@ -66,6 +89,20 @@ Configure these in your repository settings under **Settings > Secrets > Actions
 The pipeline uses the **`hojhon-site`** GitHub Environment for secure secret management.
 
 ## 🏗️ Architecture
+
+### Infrastructure Stack
+- **Hypervisor**: Proxmox VE for virtualization
+- **Container Platform**: Kubernetes cluster on Proxmox VMs
+- **GitOps**: ArgoCD for automated deployments
+- **Security**: Cloudflare Zero Trust tunnels for secure access
+- **CI/CD**: GitHub Actions with security scanning
+
+### Deployment Flow
+1. **Code Push** → GitHub Actions triggers build and security scans
+2. **Image Registry** → Secure images pushed to Docker registry
+3. **ArgoCD Sync** → Monitors registry and deploys to Kubernetes
+4. **Cloudflare Tunnel** → Exposes application securely without port forwarding
+5. **Zero Trust Access** → Users access via secure Cloudflare tunnel
 
 ### Multi-Stage Docker Build
 - **Stage 1:** Build preparation with Formspree URL injection
@@ -117,17 +154,18 @@ The pipeline generates detailed security reports and fails fast on security viol
 - **Vulnerability Reports:** Detailed findings for any detected issues
 - **Deployment Gates:** Automatic blocking of vulnerable images
 
-## 🚀 Future Enhancements
+## 🚀 Production Features
 
-### GitOps Integration
-Ready for ArgoCD integration with:
-- Kubernetes manifests
-- Automated image tag updates  
-- GitOps deployment workflows
-- Environment promotion pipelines
+### Current Implementation
+- **GitOps Deployment**: ArgoCD manages Kubernetes deployments
+- **Self-Hosted Infrastructure**: Running on Proxmox home lab
+- **Zero Trust Security**: Cloudflare tunnels eliminate need for port forwarding
+- **Automated CI/CD**: Security-first pipeline with vulnerability gates
+- **Container Security**: Multi-stage builds with non-root execution
 
-### Advanced Security
-- Container image signing
-- SBOM (Software Bill of Materials) generation
-- Runtime security monitoring
-- Compliance reporting
+### Infrastructure Benefits
+- **No Public IPs**: Cloudflare tunnels provide secure external access
+- **Automated Deployments**: ArgoCD watches for image updates
+- **High Availability**: Kubernetes provides container orchestration
+- **Security First**: Multiple scanning layers before deployment
+- **Cost Effective**: Self-hosted on Proxmox infrastructure
