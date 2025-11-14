@@ -17,6 +17,38 @@ This repository uses GitHub Actions for automated build, security scanning, and 
 4. **📊 Security Evaluation** - Fails pipeline on critical/high vulnerabilities
 5. **🚢 Push** - Pushes secure images to Docker registry (only if scans pass)
 
+### 📊 Workflow Diagram
+
+```mermaid
+graph TD
+    A[🚀 Manual Trigger<br/>workflow_dispatch] --> B[📥 Checkout Code]
+    B --> C[🔨 Build Docker Image<br/>with FORMSPREE_FORM_ID]
+    C --> D[🔍 Semgrep Code Scan<br/>Static Analysis]
+    C --> E[🛡️ Trivy Container Scan<br/>Vulnerability Detection]
+    
+    D --> F{📊 Security Evaluation<br/>Critical: 0, High: 0}
+    E --> F
+    
+    F -->|✅ Pass| G[🔐 Login to Docker Registry]
+    F -->|❌ Fail| H[🚫 Pipeline Fails<br/>Security Issues Found]
+    
+    G --> I[🚢 Build & Push Final Image<br/>Tags: latest, sha]
+    I --> J[✅ Deployment Ready<br/>Secure Image Available]
+    
+    H --> K[📝 Security Report<br/>Fix Issues & Retry]
+    
+    style F fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style G fill:#4ecdc4,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style I fill:#45b7d1,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style H fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style J fill:#96ceb4,stroke:#ffffff,stroke-width:2px,color:#ffffff
+```
+
+#### Security Gate Details:
+- **✅ Pass Criteria:** 0 Critical + 0 High vulnerabilities
+- **❌ Fail Criteria:** Any Critical or High vulnerabilities detected  
+- **📋 Reporting:** Detailed scan results in GitHub Actions summary
+
 #### Security Thresholds:
 - **Critical vulnerabilities:** `0` (fails pipeline)
 - **High vulnerabilities:** `0` (fails pipeline)  
