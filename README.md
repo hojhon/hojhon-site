@@ -37,18 +37,13 @@ graph LR
 ### Deployment Architecture
 
 ```mermaid
-graph TB
+graph LR
     subgraph "GitHub"
-        A[Developer] --> B[Push Code]
-        B --> C[GitHub Actions]
-        C --> D[Docker Registry]
+        A[Developer] --> B[Push Code] --> C[GitHub Actions] --> D[Docker Registry]
     end
     
     subgraph "Proxmox Infrastructure"
-        subgraph "Kubernetes Cluster"
-            E[ArgoCD] --> F[K8s Services]
-            F --> G[Portfolio Pod]
-        end
+        E[ArgoCD] --> F[K8s Services] --> G[Portfolio Pod]
     end
     
     subgraph "Cloudflare"
