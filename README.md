@@ -11,43 +11,38 @@ This repository uses GitHub Actions for automated build, security scanning, and 
 **File:** `.github/workflows/build-scan-push.yml`
 
 #### Pipeline Stages:
-1. **🔨 Build** - Creates Docker image with embedded Formspree configuration
-2. **🔍 Code Scan** - Semgrep static analysis for code vulnerabilities  
-3. **🛡️ Container Scan** - Trivy security scan for container vulnerabilities
-4. **📊 Security Evaluation** - Fails pipeline on critical/high vulnerabilities
-5. **🚢 Push** - Pushes secure images to Docker registry (only if scans pass)
+1. **Build** - Creates Docker image with embedded Formspree configuration
+2. **Code Scan** - Semgrep static analysis for code vulnerabilities  
+3. **Container Scan** - Trivy security scan for container vulnerabilities
+4. **Security Evaluation** - Fails pipeline on critical/high vulnerabilities
+5. **Push** - Pushes secure images to Docker registry (only if scans pass)
 
-### 📊 Workflow Diagram
+### Workflow Diagram
 
 ```mermaid
-graph TD
-    A[🚀 Manual Trigger<br/>workflow_dispatch] --> B[📥 Checkout Code]
-    B --> C[🔨 Build Docker Image<br/>with FORMSPREE_FORM_ID]
-    C --> D[🔍 Semgrep Code Scan<br/>Static Analysis]
-    C --> E[🛡️ Trivy Container Scan<br/>Vulnerability Detection]
+graph LR
+    A[Manual Trigger] --> B[Checkout Code] --> C[Build Docker Image]
     
-    D --> F{📊 Security Evaluation<br/>Critical: 0, High: 0}
+    C --> D[Semgrep Code Scan]
+    C --> E[Trivy Container Scan]
+    
+    D --> F{Security Gate<br/>Critical: 0<br/>High: 0}
     E --> F
     
-    F -->|✅ Pass| G[🔐 Login to Docker Registry]
-    F -->|❌ Fail| H[🚫 Pipeline Fails<br/>Security Issues Found]
-    
-    G --> I[🚢 Build & Push Final Image<br/>Tags: latest, sha]
-    I --> J[✅ Deployment Ready<br/>Secure Image Available]
-    
-    H --> K[📝 Security Report<br/>Fix Issues & Retry]
+    F -->|Pass| G[Docker Login] --> H[Build & Push Image] --> I[Deployment Ready]
+    F -->|Fail| J[Pipeline Fails] --> K[Security Report]
     
     style F fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
     style G fill:#4ecdc4,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style I fill:#45b7d1,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style H fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    style J fill:#96ceb4,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style H fill:#45b7d1,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style J fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
+    style I fill:#96ceb4,stroke:#ffffff,stroke-width:2px,color:#ffffff
 ```
 
 #### Security Gate Details:
-- **✅ Pass Criteria:** 0 Critical + 0 High vulnerabilities
-- **❌ Fail Criteria:** Any Critical or High vulnerabilities detected  
-- **📋 Reporting:** Detailed scan results in GitHub Actions summary
+- **Pass Criteria:** 0 Critical + 0 High vulnerabilities
+- **Fail Criteria:** Any Critical or High vulnerabilities detected  
+- **Reporting:** Detailed scan results in GitHub Actions summary
 
 #### Security Thresholds:
 - **Critical vulnerabilities:** `0` (fails pipeline)
