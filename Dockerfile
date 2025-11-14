@@ -37,6 +37,7 @@ RUN addgroup -g 1001 -S nginx-app && \
 
 # Copy static files from builder stage
 COPY --from=builder /app/index.html /usr/share/nginx/html/
+COPY --from=builder /app/blog/ /usr/share/nginx/html/blog/
 COPY --from=builder /app/docker-entrypoint.sh /docker-entrypoint.sh
 
 # Copy custom nginx config for non-root user
