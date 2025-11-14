@@ -20,8 +20,9 @@ This repository uses GitHub Actions for automated build, security scanning, and 
 ### Workflow Diagram
 
 ```mermaid
-graph LR
-    A[Manual Trigger] --> B[Checkout Code] --> C[Build Docker Image]
+graph TB
+    A[Manual Trigger] --> B[Checkout Code]
+    B --> C[Build Docker Image]
     
     C --> D[Semgrep Code Scan]
     C --> E[Trivy Container Scan]
@@ -29,8 +30,13 @@ graph LR
     D --> F{Security Gate<br/>Critical: 0<br/>High: 0}
     E --> F
     
-    F -->|Pass| G[Docker Login] --> H[Build & Push Image] --> I[Deployment Ready]
-    F -->|Fail| J[Pipeline Fails] --> K[Security Report]
+    F -->|Pass| G[Docker Login]
+    F -->|Fail| J[Pipeline Fails]
+    
+    G --> H[Build & Push Image]
+    H --> I[Deployment Ready]
+    
+    J --> K[Security Report]
     
     style F fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
     style G fill:#4ecdc4,stroke:#ffffff,stroke-width:2px,color:#ffffff
