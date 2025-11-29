@@ -1,7 +1,18 @@
 name: Build, Scan and Push to Docker Hub
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag for the Docker image (e.g., v2.0.1)'
+        required: true
+        default: 'latest'
+        type: string
+      push_latest:
+        description: 'Also tag as latest'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   build-and-scan:
@@ -26,7 +37,6 @@ jobs:
       run: |
         cat > docker-entrypoint.sh <<'SH'
         #!/bin/sh
-        # Replace placeholder in the shipped index.html with the runtime Formspree URL
         if [ -n "$FORMSPREE_FORM_ID" ]; then
           sed -i "s|FORMSPREE_URL_PLACEHOLDER|https://formspree.io/f/$FORMSPREE_FORM_ID|g" /usr/share/nginx/html/index.html || true
         else
@@ -59,15 +69,12 @@ jobs:
       env:
         SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
       run: |
-        # Install semgrep
         python -m pip install --upgrade pip
         pip install semgrep
         
-        # Run semgrep and capture output
         echo "Running Semgrep scan..."
         semgrep --config=auto --json --output=semgrep-results.json . || true
         
-        # Check if results file exists
         if [ ! -f semgrep-results.json ]; then
           echo "No semgrep results file generated"
           echo "code-critical=0" >> $GITHUB_OUTPUT
@@ -75,7 +82,6 @@ jobs:
           echo "code-medium=0" >> $GITHUB_OUTPUT
           echo "code-low=0" >> $GITHUB_OUTPUT
         else
-          # Parse results and count by severity
           critical=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood == "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
           high=$(jq '[.results[] | select(.extra.metadata.impact == "HIGH" and .extra.metadata.likelihood != "HIGH")] | length' semgrep-results.json 2>/dev/null || echo "0")
           medium=$(jq '[.results[] | select(.extra.metadata.impact == "MEDIUM" or .extra.severity == "ERROR")] | length' semgrep-results.json 2>/dev/null || echo "0")
@@ -123,7 +129,6 @@ jobs:
     - name: Evaluate overall security results
       id: evaluate-security
       run: |
-        # Get results from previous steps
         code_critical=${{ steps.semgrep-scan.outputs.code-critical }}
         code_high=${{ steps.semgrep-scan.outputs.code-high }}
         code_medium=${{ steps.semgrep-scan.outputs.code-medium }}
@@ -134,7 +139,6 @@ jobs:
         docker_medium=${{ steps.evaluate-docker-scan.outputs.docker-medium }}
         docker_low=${{ steps.evaluate-docker-scan.outputs.docker-low }}
         
-        # Calculate totals
         total_critical=$((code_critical + docker_critical))
         total_high=$((code_high + docker_high))
         total_medium=$((code_medium + docker_medium))
@@ -187,8 +191,9 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKER_REPOSITORY }}:latest
+          ${{ secrets.DOCKER_REPOSITORY }}:${{ github.event.inputs.version }}
           ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
+          ${{ github.event.inputs.push_latest == 'true' && format('{0}:latest', secrets.DOCKER_REPOSITORY) || '' }}
         build-args: |
           FORMSPREE_FORM_ID=${{ secrets.FORMSPREE_FORM_ID }}
 
@@ -197,8 +202,11 @@ jobs:
       run: |
         echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
         if [ "${{ steps.evaluate-security.outputs.scan-passed }}" == "true" ]; then
-          echo "✅ Image built and pushed successfully to ${{ secrets.DOCKER_REPOSITORY }}:latest" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Image built and pushed successfully with version: ${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tagged with commit SHA: ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.push_latest }}" == "true" ]; then
+            echo "✅ Also tagged as latest: ${{ secrets.DOCKER_REPOSITORY }}:latest" >> $GITHUB_STEP_SUMMARY
+          fi
         else
           echo "❌ Image push skipped due to security vulnerabilities" >> $GITHUB_STEP_SUMMARY
         fi
