@@ -7,100 +7,345 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --glow-color: rgba(102, 126, 234, 0.4);
+        }
+        
+        * {
+            scroll-behavior: smooth;
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* bg-slate-900 */
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 35%, #16213e 100%);
+            overflow-x: hidden;
+            position: relative;
         }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(79, 172, 254, 0.05) 0%, transparent 50%);
+            animation: floating 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-20px, -10px) rotate(1deg); }
+            66% { transform: translate(20px, 10px) rotate(-1deg); }
+        }
+        
         .gradient-text {
-            background: linear-gradient(to right, #38bdf8, #34d399);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4facfe 100%);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
         }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .glassmorphism {
+            background: rgba(30, 41, 59, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
         .section-bg {
-            background-color: rgba(30, 41, 59, 0.5); /* bg-slate-800 with 50% opacity */
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.3) 0%, rgba(15, 23, 42, 0.5) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        /* Styles for scroll animations */
+        
+        /* Enhanced reveal animations */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform: translateY(60px) scale(0.9);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+        
         .reveal.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
-        /* Custom transition for nav menu */
+        
+        .reveal-slide {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .reveal-slide.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Magnetic hover effect */
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .magnetic:hover {
+            transform: translateZ(0) scale(1.05);
+        }
+        
+        /* Floating elements */
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Neon glow effect */
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3), 0 0 40px rgba(102, 126, 234, 0.2), 0 0 60px rgba(102, 126, 234, 0.1);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5), 0 0 20px rgba(102, 126, 234, 0.3), 0 0 30px rgba(102, 126, 234, 0.1);
+        }
+        
+        /* Gradient borders */
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(45deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border-radius: 16px;
+            padding: 2px;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #4facfe);
+            border-radius: inherit;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: subtract;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+        }
+        
+        /* Typography enhancements */
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Advanced hover states */
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Skill progression bars */
+        .skill-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: translateX(-100%);
+            transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .skill-progress.animate {
+            transform: translateX(0);
+        }
+        
+        /* Mobile menu enhancements */
         #mobile-menu {
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(20px);
         }
+        
         .cert-logo {
             filter: grayscale(1) brightness(1.5);
-            transition: filter 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+        
         .cert-card:hover .cert-logo {
             filter: grayscale(0) brightness(1);
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 9999;
+            transform-origin: left;
+            transition: transform 0.2s ease-out;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #4facfe);
         }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-300">
+    <!-- Progress indicator -->
+    <div class="progress-bar" id="progress-bar"></div>
 
-    <!-- Header / Navigation --><header class="bg-slate-900/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-800">
+    <!-- Header / Navigation --><header class="glassmorphism sticky top-0 z-50 border-b border-white/10">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <a href="#" class="text-xl font-bold text-white">Jhon Herrera</a>
-                <div class="hidden md:flex items-center text-slate-400 text-sm border-l border-slate-700 pl-4">
-                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                    <span>Atlanta, GA, USA</span>
+                <a href="#" class="text-xl font-bold text-white neon-text hover:scale-105 transition-transform duration-300">Jhon Herrera</a>
+                <div class="hidden md:flex items-center text-slate-400 text-sm border-l border-slate-600/50 pl-4">
+                    <svg class="w-4 h-4 mr-1.5 text-sky-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                    <span class="mono text-xs uppercase tracking-wider">Atlanta, GA, USA</span>
                 </div>
             </div>
             
             <!-- Desktop Nav -->
             <ul class="hidden md:flex items-center space-x-8">
-                <li><a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors duration-300">Skills</a></li>
-                <li><a href="#certs" class="text-slate-300 hover:text-sky-400 transition-colors duration-300">Certifications</a></li>
-                <li><a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors duration-300">Projects</a></li>
-                <li><a href="#contact" class="bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-300">Contact</a></li>
+                <li><a href="#skills" class="relative text-slate-300 hover:text-white transition-all duration-300 group">
+                    <span>Skills</span>
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-sky-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
+                </a></li>
+                <li><a href="#certs" class="relative text-slate-300 hover:text-white transition-all duration-300 group">
+                    <span>Certifications</span>
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-sky-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
+                </a></li>
+                <li><a href="#projects" class="relative text-slate-300 hover:text-white transition-all duration-300 group">
+                    <span>Projects</span>
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-sky-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
+                </a></li>
+                <li><a href="#contact" class="bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white font-medium py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105 neon-glow">Contact</a></li>
             </ul>
 
             <!-- Mobile Menu Button -->
             <div class="md:hidden">
-                <button id="menu-btn" class="text-white focus:outline-none">
-                    <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button id="menu-btn" class="w-10 h-10 bg-slate-800/50 hover:bg-slate-700/70 backdrop-blur-sm border border-slate-600/50 hover:border-slate-500/70 rounded-xl flex items-center justify-center text-white focus:outline-none transition-all duration-300">
+                    <svg id="menu-open-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg id="menu-close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
         </nav>
         
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden opacity-0 transform -translate-y-4">
-            <ul class="px-6 pb-4 flex flex-col space-y-4">
-                 <li><a href="#skills" class="block text-slate-300 hover:text-sky-400 transition-colors duration-300">Skills</a></li>
-                <li><a href="#certs" class="block text-slate-300 hover:text-sky-400 transition-colors duration-300">Certifications</a></li>
-                <li><a href="#projects" class="block text-slate-300 hover:text-sky-400 transition-colors duration-300">Projects</a></li>
-                <li><a href="#contact" class="block bg-sky-600 hover:bg-sky-700 text-white font-medium text-center py-2 px-4 rounded-md transition-all duration-300">Contact</a></li>
+        <!-- Enhanced Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden opacity-0 transform -translate-y-4 glassmorphism border-t border-white/10">
+            <ul class="px-6 py-6 flex flex-col space-y-4">
+                <li><a href="#skills" class="block text-slate-300 hover:text-white transition-all duration-300 py-2 px-4 rounded-lg hover:bg-slate-700/50">Skills</a></li>
+                <li><a href="#certs" class="block text-slate-300 hover:text-white transition-all duration-300 py-2 px-4 rounded-lg hover:bg-slate-700/50">Certifications</a></li>
+                <li><a href="#projects" class="block text-slate-300 hover:text-white transition-all duration-300 py-2 px-4 rounded-lg hover:bg-slate-700/50">Projects</a></li>
+                <li><a href="#contact" class="block bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white font-medium text-center py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">Contact</a></li>
             </ul>
         </div>
     </header>
 
     <main class="container mx-auto px-6 py-12 md:py-20">
 
-        <!-- Hero Section --><section class="text-center min-h-[70vh] flex flex-col items-center justify-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight reveal">
-                Jhon Herrera
-            </h1>
-            <h2 class="mt-4 text-2xl md:text-3xl font-medium text-transparent bg-clip-text gradient-text reveal">
-                Cloud Security Engineer
-            </h2>
+        <!-- Hero Section --><section class="relative text-center min-h-[90vh] flex flex-col items-center justify-center overflow-hidden">
+            <!-- Floating decorative elements -->
+            <div class="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-sky-400/20 to-purple-400/20 rounded-full blur-xl float" style="animation-delay: 0s;"></div>
+            <div class="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-xl float" style="animation-delay: 2s;"></div>
+            <div class="absolute bottom-40 left-20 w-24 h-24 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-xl float" style="animation-delay: 4s;"></div>
             
-            <p class="mt-8 max-w-3xl mx-auto text-lg text-slate-400 reveal">
-                The Cloud’s Plumber. Preventing security leaks and catastrophic digital flooding in the Cloud.
-            </p>
+            <div class="relative z-10">
+                <div class="reveal">
+                    <p class="mono text-sky-400 text-sm uppercase tracking-[0.3em] mb-4">// Welcome to my portfolio</p>
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight tracking-tight">
+                        <span class="inline-block hover:scale-110 transition-transform duration-300 cursor-default">J</span><span class="inline-block hover:scale-110 transition-transform duration-300 cursor-default">h</span><span class="inline-block hover:scale-110 transition-transform duration-300 cursor-default">o</span><span class="inline-block hover:scale-110 transition-transform duration-300 cursor-default">n</span>
+                        <br>
+                        <span class="gradient-text neon-text">Herrera</span>
+                    </h1>
+                </div>
+                
+                <div class="mt-6 reveal" style="animation-delay: 0.2s;">
+                    <h2 class="text-2xl md:text-4xl font-semibold text-slate-300 mb-2">
+                        Cloud Security Engineer
+                    </h2>
+                    <div class="flex items-center justify-center space-x-2 text-sm md:text-base text-slate-400">
+                        <span class="mono">Specializing in</span>
+                        <span id="typing-text" class="text-sky-400 mono font-semibold min-w-[120px] text-left">Security</span>
+                        <span class="text-sky-400 animate-pulse">|</span>
+                    </div>
+                </div>
+                
+                <div class="mt-8 reveal" style="animation-delay: 0.4s;">
+                    <p class="max-w-3xl mx-auto text-lg md:text-xl text-slate-300 leading-relaxed text-glow">
+                        The Cloud's Plumber. Preventing security leaks and <br class="hidden md:block">
+                        <span class="gradient-text font-semibold">catastrophic digital flooding</span> in the Cloud.
+                    </p>
+                </div>
+            </div>
 
-            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 reveal">
-                 <a href="#contact" class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-md transition duration-300 ease-in-out transform hover:scale-105">Get In Touch</a>
-                 <a href="#projects" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 px-8 rounded-md transition duration-300 ease-in-out">View My Work</a>
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 reveal">
+                <!-- Primary CTA Button -->
+                <a href="#contact" class="group relative w-full sm:w-auto bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg shadow-sky-500/25 hover:shadow-xl hover:shadow-sky-500/40 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-sky-500/50 active:scale-95">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Get In Touch
+                    </span>
+                    <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
+                
+                <!-- Secondary CTA Button -->
+                <a href="#projects" class="group relative w-full sm:w-auto bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-sm border border-slate-600/50 hover:border-slate-500/80 text-slate-300 hover:text-white font-semibold py-4 px-8 rounded-xl shadow-lg shadow-black/25 hover:shadow-xl hover:shadow-black/40 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-slate-500/50 active:scale-95">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0l-4-4m4 4l-4 4"/>
+                        </svg>
+                        View My Work
+                    </span>
+                    <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-slate-400/0 via-slate-400/5 to-slate-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
             </div>
             
             <!-- Social Icons --><div id="socials" class="mt-12 flex justify-center space-x-6 reveal">
@@ -116,126 +361,324 @@
             </div>
         </section>
 
-        <!-- Technical Skills Section --><section id="skills" class="py-16 md:py-24 reveal section-bg rounded-lg">
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Technical Acumen</h2>
-            <div class="mt-12 max-w-5xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-                    <div>
-                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Languages & IaC</h3>
-                        <ul class="space-y-2 text-slate-400">
-                            <li>Python</li>
-                            <li>Terraform & Packer</li>
-                            <li>Shell Scripting</li>
-                            <li>SQL (MySQL)</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Tools & Platforms</h3>
-                        <ul class="space-y-2 text-slate-400">
-                            <li>AWS, GCP, Azure</li>
-                            <li>Wiz, Qualys, ShiftLeft</li>
-                            <li>Kubernetes (EKS, GKE)</li>
-                            <li>Git, Jira, ServiceNow</li>
-                             <li>ArgoCD, FluxCD, TailScale</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold text-sky-400 mb-4">Operating Systems</h3>
-                        <ul class="space-y-2 text-slate-400">
-                            <li>Linux (Kali, RHEL, Ubuntu)</li>
-                            <li>Windows Server</li>
-                            <li>MacOS</li>
-                        </ul>
+        <!-- Technical Skills Section --><section id="skills" class="py-20 md:py-32 reveal">
+            <div class="glassmorphism rounded-3xl p-8 md:p-12">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 neon-text">Technical Acumen</h2>
+                    <p class="text-slate-400 text-lg max-w-2xl mx-auto">Crafting secure, scalable cloud solutions with cutting-edge technologies</p>
+                </div>
+                
+                <div class="max-w-6xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="gradient-border hover-lift">
+                            <div class="p-6 bg-slate-900/80 rounded-2xl h-full">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-sky-400 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white">Languages & IaC</h3>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">Python</span>
+                                            <span class="mono text-xs text-sky-400">90%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="90"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">Terraform & Packer</span>
+                                            <span class="mono text-xs text-sky-400">85%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="85"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">Shell Scripting</span>
+                                            <span class="mono text-xs text-sky-400">95%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="95"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">SQL (MySQL)</span>
+                                            <span class="mono text-xs text-sky-400">75%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="75"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gradient-border hover-lift">
+                            <div class="p-6 bg-slate-900/80 rounded-2xl h-full">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white">Tools & Platforms</h3>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">AWS, GCP, Azure</span>
+                                            <span class="mono text-xs text-purple-400">90%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="90" style="background: linear-gradient(90deg, #a855f7, #ec4899);"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">Wiz, Qualys, ShiftLeft</span>
+                                            <span class="mono text-xs text-purple-400">80%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="80" style="background: linear-gradient(90deg, #a855f7, #ec4899);"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">Kubernetes (EKS, GKE)</span>
+                                            <span class="mono text-xs text-purple-400">85%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="85" style="background: linear-gradient(90deg, #a855f7, #ec4899);"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">ArgoCD, FluxCD, TailScale</span>
+                                            <span class="mono text-xs text-purple-400">75%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="75" style="background: linear-gradient(90deg, #a855f7, #ec4899);"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">AI/ML Tools & Frameworks</span>
+                                            <span class="mono text-xs text-purple-400">65%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="65" style="background: linear-gradient(90deg, #a855f7, #ec4899);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gradient-border hover-lift">
+                            <div class="p-6 bg-slate-900/80 rounded-2xl h-full">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white">Operating Systems</h3>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">Linux (Kali, RHEL, Ubuntu)</span>
+                                            <span class="mono text-xs text-green-400">95%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="95" style="background: linear-gradient(90deg, #10b981, #34d399);"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">Windows Server</span>
+                                            <span class="mono text-xs text-green-400">70%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="70" style="background: linear-gradient(90deg, #10b981, #34d399);"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-slate-300 font-medium">MacOS</span>
+                                            <span class="mono text-xs text-green-400">85%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-progress" data-progress="85" style="background: linear-gradient(90deg, #10b981, #34d399);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Certifications Section --><section id="certs" class="py-16 md:py-24 reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Certifications</h2>
-            <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- Certifications Section --><section id="certs" class="py-20 md:py-32 reveal">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-4 neon-text">Certifications</h2>
+                <p class="text-slate-400 text-lg max-w-2xl mx-auto">Industry-recognized credentials validating expertise in cloud security and infrastructure</p>
+            </div>
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://avatars.githubusercontent.com/u/2810941?s=200&v=4" alt="GCP Logo" class="h-20 w-20 mb-4 rounded-full object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=GCP';">
-                    <h3 class="text-md font-semibold text-white flex-grow">GCP Associate Cloud Engineer</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-sky-400/20 to-blue-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://avatars.githubusercontent.com/u/2810941?s=200&v=4" alt="GCP Logo" class="relative h-20 w-20 rounded-full object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=GCP';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-sky-300 transition-colors duration-300">GCP Associate Cloud Engineer</h3>
                 </div>
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://developer.hashicorp.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fterraform-badge-mini-associate.1419a397.svg&w=96&q=75&dpl=dpl_3tSM3qCiHRdnWXm43oL5dDuMjMDc" alt="Terraform Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Terraform';">
-                    <h3 class="text-md font-semibold text-white flex-grow">HashiCorp: Terraform Associate</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-red-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://developer.hashicorp.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fterraform-badge-mini-associate.1419a397.svg&w=96&q=75&dpl=dpl_3tSM3qCiHRdnWXm43oL5dDuMjMDc" alt="Terraform Logo" class="relative h-20 w-20 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Terraform';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-orange-300 transition-colors duration-300">HashiCorp: Terraform Associate</h3>
                 </div>
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F8623b0fab71111efac96d615e91762a5%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="Security+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Sec%2B';">
-                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA Security+</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-red-400/20 to-pink-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F8623b0fab71111efac96d615e91762a5%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="Security+ Logo" class="relative h-20 w-20 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Sec%2B';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-red-300 transition-colors duration-300">CompTIA Security+</h3>
                 </div>
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F842acf9ab71111efac96d615e91762a5%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="CySA+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=CySA%2B';">
-                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA CySA+</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-indigo-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F842acf9ab71111efac96d615e91762a5%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="CySA+ Logo" class="relative h-20 w-20 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=CySA%2B';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-purple-300 transition-colors duration-300">CompTIA CySA+</h3>
                 </div>
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-fundamentals-badge.svg" alt="Azure Fundamentals Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Azure';">
-                    <h3 class="text-md font-semibold text-white flex-grow">Azure Fundamentals</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-cyan-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-fundamentals-badge.svg" alt="Azure Fundamentals Logo" class="relative h-20 w-20 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Azure';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-blue-300 transition-colors duration-300">Azure Fundamentals</h3>
                 </div>
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://d1.awsstatic.com/onedam/marketing-channels/website/aws/en_US/certification/approved/images/certification-badges/clf-badge-resized.2fdbed6fe7b39cf6cef5063f283ddd689cc78caa.png" alt="AWS CCP Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=AWS';">
-                    <h3 class="text-md font-semibold text-white flex-grow">AWS Certified Cloud Practitioner</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://d1.awsstatic.com/onedam/marketing-channels/website/aws/en_US/certification/approved/images/certification-badges/clf-badge-resized.2fdbed6fe7b39cf6cef5063f283ddd689cc78caa.png" alt="AWS CCP Logo" class="relative h-20 w-20 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=AWS';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-yellow-300 transition-colors duration-300">AWS Certified Cloud Practitioner</h3>
                 </div>
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F8485bccab71111ef888eca5646afc7d8%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="Project+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Proj%2B';">
-                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA Project+</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F8485bccab71111ef888eca5646afc7d8%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="Project+ Logo" class="relative h-20 w-20 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=Proj%2B';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-green-300 transition-colors duration-300">CompTIA Project+</h3>
                 </div>
-                <div class="cert-card bg-slate-800 rounded-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F83adafb0b71111ef888eca5646afc7d8%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="A+ Logo" class="h-20 w-20 mb-4 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=A%2B';">
-                    <h3 class="text-md font-semibold text-white flex-grow">CompTIA A+</h3>
+                <div class="cert-card glassmorphism p-6 flex flex-col items-center text-center magnetic hover-lift group">
+                    <div class="relative mb-4">
+                        <div class="absolute inset-0 bg-gradient-to-r from-teal-400/20 to-cyan-500/20 rounded-full blur group-hover:blur-xl transition-all duration-300"></div>
+                        <img src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F83adafb0b71111ef888eca5646afc7d8%3Fwidth%3D300%26height%3D300&w=640&q=90" alt="A+ Logo" class="relative h-20 w-20 object-contain cert-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1e293b/94a3b8?text=A%2B';">
+                    </div>
+                    <h3 class="text-sm font-semibold text-white flex-grow group-hover:text-teal-300 transition-colors duration-300">CompTIA A+</h3>
                 </div>
             </div>
         </section>
 
-        <!-- Projects Section --><section id="projects" class="py-16 md:py-24 reveal section-bg rounded-lg">
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-white">Featured Projects & Experience</h2>
-            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+        <!-- Projects Section --><section id="projects" class="py-20 md:py-32 reveal">
+            <div class="glassmorphism rounded-3xl p-8 md:p-12">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 neon-text">Featured Projects & Experience</h2>
+                    <p class="text-slate-400 text-lg max-w-3xl mx-auto">Real-world cloud security implementations that drive business value and ensure digital resilience</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                <div class="bg-slate-900 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 hover:shadow-2xl hover:shadow-sky-900/20">
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-semibold text-white">SailPoint IAM Migration to Azure</h3>
-                        <p class="mt-2 text-slate-400 flex-grow">Mission: Migrated the entire environment to Azure using IaC. Result: Built a robust vulnerability program (Qualys/Wiz) that guarantees $100\%$ availability and strict cost control.</p>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">Azure</span>
-                            <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">IaC</span>
-                            <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">Wiz</span>
-                             <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">Qualys</span>
-                             <span class="bg-sky-900/50 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">Azure Pipelines</span>
+                    <div class="gradient-border hover-lift group">
+                        <div class="bg-slate-900/80 rounded-2xl p-6 h-full flex flex-col">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-sky-400 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white group-hover:text-sky-300 transition-colors duration-300">SailPoint IAM Migration to Azure</h3>
+                            </div>
+                            <p class="text-slate-300 flex-grow mb-6 leading-relaxed">Mission: Migrated the entire environment to Azure using IaC. Result: Built a robust vulnerability program (Qualys/Wiz) that guarantees <span class="mono text-sky-400 font-semibold">100%</span> availability and strict cost control.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-300 text-xs font-semibold px-3 py-1 rounded-full border border-sky-500/30">Azure</span>
+                                <span class="bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-300 text-xs font-semibold px-3 py-1 rounded-full border border-sky-500/30">IaC</span>
+                                <span class="bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-300 text-xs font-semibold px-3 py-1 rounded-full border border-sky-500/30">Wiz</span>
+                                <span class="bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-300 text-xs font-semibold px-3 py-1 rounded-full border border-sky-500/30">Qualys</span>
+                                <span class="bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-300 text-xs font-semibold px-3 py-1 rounded-full border border-sky-500/30">Azure Pipelines</span>
+                            </div>
+                            <div class="flex items-center text-xs text-slate-400 mono">
+                                <span>🏢 Enterprise Level</span>
+                                <span class="mx-2">•</span>
+                                <span>⚡ High Impact</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gradient-border hover-lift group">
+                        <div class="bg-slate-900/80 rounded-2xl p-6 h-full flex flex-col">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white group-hover:text-green-300 transition-colors duration-300">ForgeRock IAM Migration to GCP</h3>
+                            </div>
+                            <p class="text-slate-300 flex-grow mb-6 leading-relaxed">Mission: Led the migration to GCP using IaC. Result: Implemented a comprehensive vulnerability management solution, maintaining <span class="mono text-green-400 font-semibold">100%</span> availability for a massive customer-facing application.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full border border-green-500/30">GCP</span>
+                                <span class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full border border-green-500/30">IaC</span>
+                                <span class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full border border-green-500/30">Leadership</span>
+                                <span class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full border border-green-500/30">Terraform</span>
+                                <span class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full border border-green-500/30">GitHub Actions</span>
+                            </div>
+                            <div class="flex items-center text-xs text-slate-400 mono">
+                                <span>🎯 Fortune 20</span>
+                                <span class="mx-2">•</span>
+                                <span>👥 Team Lead</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gradient-border hover-lift group">
+                        <div class="bg-slate-900/80 rounded-2xl p-6 h-full flex flex-col">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300">Personal Website & Home Lab</h3>
+                            </div>
+                            <p class="text-slate-300 flex-grow mb-6 leading-relaxed">This portfolio site is self-hosted in my Proxmox lab and served via a Cloudflare Tunnel. The rest of my home lab utilizes Terraform for IaC, Vault for secrets, ArgoCD for GitOps, and GitHub Actions for CI/CD.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full border border-purple-500/30">Proxmox</span>
+                                <span class="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full border border-purple-500/30">Cloudflare</span>
+                                <span class="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full border border-purple-500/30">ArgoCD</span>
+                                <span class="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full border border-purple-500/30">Terraform</span>
+                                <span class="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full border border-purple-500/30">Vault</span>
+                            </div>
+                            <div class="flex items-center text-xs text-slate-400 mono">
+                                <span>🏠 Self-Hosted</span>
+                                <span class="mx-2">•</span>
+                                <span>🔧 DevOps</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                 <div class="bg-slate-900 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 hover:shadow-2xl hover:shadow-green-900/20">
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-semibold text-white">ForgeRock IAM Migration to GCP</h3>
-                        <p class="mt-2 text-slate-400 flex-grow">Led the cloud migration by creating all infrastructure-as-code to deploy the customer-facing ForgeRock platform on GCP. Also implemented a comprehensive vulnerability management solution with Qualys and Wiz, maintaining 100% availability for a fortune 20 retailer's mobile app and web sign-ins, Automation of repetitive tasks backups, etc.</p>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                           <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">GCP</span>
-                           <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">IaC</span>
-                           <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Leadership</span>
-                           <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">Terraform</span>
-                           <span class="bg-green-900/50 text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full">GitHub Actions</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 rounded-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 hover:shadow-2xl hover:shadow-indigo-900/20">
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-semibold text-white">Personal Website & Home Lab</h3>
-                        <p class="mt-2 text-slate-400 flex-grow">This portfolio site is self-hosted in my Proxmox lab and served via a Cloudflare Tunnel. The rest of my home lab utilizes Terraform for IaC, Vault for secrets, ArgoCD for GitOps, and GitHub Actions for CI/CD.</p>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">Proxmox</span>
-                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">Cloudflare</span>
-                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">ArgoCD</span>
-                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">Terraform</span>
-                            <span class="bg-indigo-900/50 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full">Vault</span>
-                        </div>
-                    </div>
-                </div>
-                
             </div>
         </section>
         
@@ -268,25 +711,104 @@
 
     </main>
 
-    <!-- Footer --><footer class="bg-slate-900 border-t border-slate-800">
-        <div class="container mx-auto px-6 py-8 text-center text-slate-500">
-            <p>&copy; 2024 Jhon Herrera. All Rights Reserved.</p>
+    <!-- Footer --><footer class="glassmorphism border-t border-white/10 mt-20">
+        <div class="container mx-auto px-6 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold text-white mb-2 neon-text">Jhon Herrera</h3>
+                    <p class="text-slate-400 mono text-sm">Senior Cloud Security Engineer & Infrastructure Specialist</p>
+                    <p class="text-slate-500 mono text-xs mt-1">AI/ML Enthusiast & Continuous Learner</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#skills" class="text-slate-400 hover:text-white transition-colors duration-300 text-sm">Skills</a>
+                    <a href="#certs" class="text-slate-400 hover:text-white transition-colors duration-300 text-sm">Certifications</a>
+                    <a href="#projects" class="text-slate-400 hover:text-white transition-colors duration-300 text-sm">Projects</a>
+                    <a href="#contact" class="text-slate-400 hover:text-white transition-colors duration-300 text-sm">Contact</a>
+                </div>
+            </div>
+            <div class="border-t border-slate-700/50 pt-6 mt-6 text-center">
+                <p class="text-slate-500 text-sm mono">&copy; 2024 Jhon Herrera. Crafted with 💜 and ☕. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Scroll reveal animation
-            const revealElements = document.querySelectorAll('.reveal');
+            // Progress bar functionality
+            const progressBar = document.getElementById('progress-bar');
+            function updateProgressBar() {
+                const scrollTop = window.pageYOffset;
+                const docHeight = document.body.offsetHeight;
+                const winHeight = window.innerHeight;
+                const scrollPercent = scrollTop / (docHeight - winHeight);
+                const scrollPercentRounded = Math.round(scrollPercent * 100);
+                progressBar.style.transform = `scaleX(${scrollPercent})`;
+            }
+            window.addEventListener('scroll', updateProgressBar);
+
+            // Enhanced scroll reveal animation
+            const revealElements = document.querySelectorAll('.reveal, .reveal-slide');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        observer.unobserve(entry.target); 
+                        // Trigger skill bars animation when skills section is visible
+                        if (entry.target.id === 'skills') {
+                            animateSkillBars();
+                        }
+                        observer.unobserve(entry.target);
                     }
                 });
             }, { threshold: 0.1 });
+            
             revealElements.forEach(elem => observer.observe(elem));
+
+            // Skill bars animation
+            function animateSkillBars() {
+                const skillBars = document.querySelectorAll('.skill-progress');
+                skillBars.forEach((bar, index) => {
+                    setTimeout(() => {
+                        const progress = bar.getAttribute('data-progress');
+                        bar.style.transform = `translateX(-${100 - progress}%)`;
+                        bar.classList.add('animate');
+                    }, index * 100);
+                });
+            }
+
+            // Typing animation for hero section
+            const typingTexts = ['Security', 'DevOps', 'Automation', 'AI/ML', 'Innovation', 'Excellence'];
+            let currentTextIndex = 0;
+            let currentCharIndex = 0;
+            let isDeleting = false;
+            const typingElement = document.getElementById('typing-text');
+            
+            function typeText() {
+                const currentText = typingTexts[currentTextIndex];
+                
+                if (isDeleting) {
+                    typingElement.textContent = currentText.substring(0, currentCharIndex - 1);
+                    currentCharIndex--;
+                } else {
+                    typingElement.textContent = currentText.substring(0, currentCharIndex + 1);
+                    currentCharIndex++;
+                }
+                
+                let typeSpeed = isDeleting ? 50 : 100;
+                
+                if (!isDeleting && currentCharIndex === currentText.length) {
+                    typeSpeed = 2000;
+                    isDeleting = true;
+                } else if (isDeleting && currentCharIndex === 0) {
+                    isDeleting = false;
+                    currentTextIndex = (currentTextIndex + 1) % typingTexts.length;
+                    typeSpeed = 500;
+                }
+                
+                setTimeout(typeText, typeSpeed);
+            }
+            
+            // Start typing animation
+            setTimeout(typeText, 1000);
 
             // Mobile menu toggle
             const menuBtn = document.getElementById('menu-btn');
@@ -309,6 +831,77 @@
                 }
                 openIcon.classList.toggle('hidden');
                 closeIcon.classList.toggle('hidden');
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add magnetic effect to elements with magnetic class
+            document.querySelectorAll('.magnetic').forEach(element => {
+                element.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    this.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px) scale(1.05)`;
+                });
+                
+                element.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translate(0px, 0px) scale(1)';
+                });
+            });
+
+            // Form enhancements
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input, textarea');
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (!this.value) {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+            });
+
+            // Add particle effect on scroll
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'fixed w-1 h-1 bg-sky-400/30 rounded-full pointer-events-none z-0';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = '100vh';
+                particle.style.animation = 'float 3s linear forwards';
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 3000);
+            }
+
+            // Occasionally create particles on scroll
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    if (Math.random() > 0.8) {
+                        createParticle();
+                    }
+                }, 100);
             });
         });
     </script>
