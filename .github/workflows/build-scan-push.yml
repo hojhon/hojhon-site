@@ -199,13 +199,19 @@ jobs:
 
     - name: Final summary
       if: always()
+      env:
+        SCAN_PASSED: ${{ steps.evaluate-security.outputs.scan-passed }}
+        VERSION: ${{ github.event.inputs.version }}
+        DOCKER_REPO: ${{ secrets.DOCKER_REPOSITORY }}
+        COMMIT_SHA: ${{ github.sha }}
+        PUSH_LATEST: ${{ github.event.inputs.push_latest }}
       run: |
         echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
-        if [ "${{ steps.evaluate-security.outputs.scan-passed }}" == "true" ]; then
-          echo "✅ Image built and pushed successfully with version: ${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Tagged with commit SHA: ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ github.event.inputs.push_latest }}" == "true" ]; then
-            echo "✅ Also tagged as latest: ${{ secrets.DOCKER_REPOSITORY }}:latest" >> $GITHUB_STEP_SUMMARY
+        if [ "$SCAN_PASSED" == "true" ]; then
+          echo "✅ Image built and pushed successfully with version: $VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tagged with commit SHA: $DOCKER_REPO:$COMMIT_SHA" >> $GITHUB_STEP_SUMMARY
+          if [ "$PUSH_LATEST" == "true" ]; then
+            echo "✅ Also tagged as latest: $DOCKER_REPO:latest" >> $GITHUB_STEP_SUMMARY
           fi
         else
           echo "❌ Image push skipped due to security vulnerabilities" >> $GITHUB_STEP_SUMMARY
